@@ -2,12 +2,10 @@ const User = require('../models/User');
 const { verifyToken } = require('../utils/jwt');
 
 const getUserDetails = async (req, res) => {
-  console.log("req.user",req.user)
   const { userId } = req.user;
 
   try {
-    // const user = await User.findById(userId).select('-password -otp -otpExpiry');
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('-password -otp -otpExpiry');
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -21,14 +19,8 @@ const getUserDetails = async (req, res) => {
 
 const addDetails = async (req, res) => {
   try {
-    const token = req.cookies.token;
 
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const decoded = verifyToken(token);
-    const userId = decoded.userId;
+    const {userId} = req.user;
 
     const { location, age, workDetails } = req.body;
 

@@ -9,7 +9,7 @@ const ageSchema = Joi.number().integer().min(1).max(120).required();
 const workDetailsSchema = Joi.string().required();
 
 const validateRegisterData = (req, res, next) => {
-    const {email, password} = req.body;
+  const {email, password} = req.body;
   const { error } = Joi.object({
     email: emailSchema,
     password: passwordSchema
@@ -28,7 +28,6 @@ const validateOTP = (req, res, next) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-
   next();
 };
 

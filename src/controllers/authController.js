@@ -36,9 +36,7 @@ const registerUser = async (req, res) => {
 };
 
 const verifyUser = async (req, res) => {
-  const { otp } = req.body;
-  const { email } = req.user;
-
+  const { email,otp } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
