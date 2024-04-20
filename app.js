@@ -1,14 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser'); // Add this line
+const cookieParser = require('cookie-parser');
 const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 
 app.get('/', (req, res) => {

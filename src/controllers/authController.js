@@ -25,9 +25,7 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-
     await sendEmail(email, 'Verify your account', `Your OTP is: ${otp}`);
-
     res.status(201).json({ message: 'User registered successfully. Check your email for OTP.' });
   } catch (err) {
     console.error(err);
@@ -36,7 +34,8 @@ const registerUser = async (req, res) => {
 };
 
 const verifyUser = async (req, res) => {
-  const { email,otp } = req.body;
+  const { otp ,email} = req.body;
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -78,7 +77,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateToken({ userId: user._id });
-    res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set cookie for 1 day
+    res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     res.status(200).json({ message: 'Login successful' });
   } catch (err) {
     console.error(err);

@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { OTP_LENGTH } = require('../utils/constants');
+const { verifyToken } = require('../utils/jwt');
 
 const emailSchema = Joi.string().email().required();
 const passwordSchema = Joi.string().min(8).required();
@@ -9,7 +10,6 @@ const ageSchema = Joi.number().integer().min(1).max(120).required();
 const workDetailsSchema = Joi.string().required();
 
 const validateRegisterData = (req, res, next) => {
-  const {email, password} = req.body;
   const { error } = Joi.object({
     email: emailSchema,
     password: passwordSchema
@@ -28,7 +28,7 @@ const validateOTP = (req, res, next) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-  next();
+  next()
 };
 
 const validateUserData = (req, res, next) => {
