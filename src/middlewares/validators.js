@@ -10,7 +10,6 @@ const workDetailsSchema = Joi.string().required();
 
 const validateRegisterData = (req, res, next) => {
     const {email, password} = req.body;
-    console.log(email,password)
   const { error } = Joi.object({
     email: emailSchema,
     password: passwordSchema

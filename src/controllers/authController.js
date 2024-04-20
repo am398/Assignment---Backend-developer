@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt');
+const { OTP_LENGTH, OTP_EXPIRY_MINUTES } = require('../utils/constants');
 const User = require('../models/User');
+const { sendEmail } = require('../services/emailService');
 const { generateToken } = require('../utils/jwt');
 
 const registerUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email,password)
 
   try {
     const existingUser = await User.findOne({ email });
@@ -24,6 +25,9 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
+
+    await sendEmail(email, 'Verify your account', `Your OTP is: ${otp}`);
+
     res.status(201).json({ message: 'User registered successfully. Check your email for OTP.' });
   } catch (err) {
     console.error(err);
@@ -69,6 +73,10 @@ const loginUser = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'User not verified' });
     }
 
     const token = generateToken({ userId: user._id });
